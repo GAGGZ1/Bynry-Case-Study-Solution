@@ -1,0 +1,48 @@
+INVENTORY MANAGEMENT SYSTEM - PRODUCTS API SOLUTION SUMMARY
+
+1. Problem:
+The original API created product and inventory separately with multiple commits, no validation, and no error handling, leading to inconsistent data in production.
+
+2. Key Issues:
+- No input validation
+- No SKU uniqueness handling
+- Multiple DB commits (partial writes possible)
+- No transaction safety
+- No price validation
+- No error handling
+
+3. Solution Implemented:
+- Added JSON validation
+- Validated required fields
+- Ensured price is decimal and non-negative
+- Validated initial_quantity (integer, non-negative)
+- Used db.session.flush() + single commit for atomicity
+- Handled duplicate SKU using IntegrityError
+- Added proper error handling and responses
+
+4. Design Decisions:
+- Separated Product and Inventory tables
+- Supports multiple warehouses per product
+- Used Decimal for price to avoid precision issues
+- Used DB constraints for consistency
+
+5. Edge Cases Covered:
+- Missing fields
+- Invalid JSON
+- Invalid/negative price
+- Invalid/negative quantity
+- Duplicate SKU
+- Partial failure prevention
+
+6. Assumptions:
+- SKU is globally unique
+- initial_quantity defaults to 0
+- warehouse_id is valid (out of scope)
+- Price stored as Decimal
+
+7. Improvements (Future Scope):
+- Validate warehouse_id
+- Add idempotency
+- Add service layer
+- Better logging & monitoring
+

@@ -1,0 +1,36 @@
+DATABASE DESIGN - PART 2 (GAPS + DECISIONS)
+
+1. Identify Gaps (Questions to ask product team)
+
+- is SKU unique globally or per company?
+- can one product belong to multiple companies or only one?
+- can warehouses store products from different companies?
+- do we need to track who updated inventory (user/admin)?
+- what are all possible inventory change types (only add/remove/update or more)?
+- do we need to track reserved stock or damaged stock?
+- can suppliers give different prices for same product over time?
+- should supplier price history be stored?
+- can bundles contain other bundles (nested bundles)?
+- should bundle price be calculated or stored separately?
+- what happens if a product in bundle is deleted?
+- do we need soft delete for products/warehouses?
+- should inventory updates be real-time or batch-based?
+
+
+2. Explain Design Decisions
+
+- separated products and inventory tables to support multiple warehouses per product
+- used UNIQUE(product_id, warehouse_id) to avoid duplicate inventory rows
+- used separate inventory_logs table to track stock changes for audit/debug
+- used DECIMAL for price to avoid floating point issues
+- used many-to-many table (supplier_products) for supplier-product relation
+- used self-referencing table (product_bundles) to handle bundle products
+- kept SKU unique to maintain product identity across system
+- added foreign keys to maintain data integrity between tables
+- timestamps added to track record creation and updates
+
+Indexes (for performance):
+- index on products(sku) for fast lookup
+- index on inventory(product_id) for product queries
+- index on inventory(warehouse_id) for warehouse queries
+

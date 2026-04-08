@@ -1,0 +1,46 @@
+LOW STOCK ALERT API - PART 3 SUMMARY
+
+1. Problem:
+Build an API to return low stock alerts for a company considering:
+- product-specific thresholds
+- recent sales activity
+- multiple warehouses
+- supplier info for reordering
+
+2. Implementation Approach:
+- Fetch products for the given company
+- Filter products with recent sales (assumed last 30 days)
+- For each product, check inventory across all warehouses
+- Compare current stock with threshold
+- If stock is low, calculate days_until_stockout using average daily sales
+- Fetch supplier info and include it in response
+- Return alerts list with total count
+
+3. Assumptions:
+- Sales table exists to track product activity
+- Recent sales window = 30 days
+- low_stock_threshold exists in product (default = 10 if missing)
+- One supplier per product (simplified)
+- Supplier has contact email
+- Simple formula used for stockout prediction
+
+4. Edge Cases Handled:
+- No recent sales → product ignored
+- No supplier → return null
+- Zero sales → avoid division by zero
+- Multiple warehouses handled correctly
+- Missing threshold → default used
+
+5. Possible Issues:
+- N+1 query problem (multiple DB calls)
+- Performance issues with large data
+- Incorrect threshold configuration
+- Missing or inconsistent sales data
+
+6. Improvements:
+- Use JOIN queries instead of loops
+- Add pagination for large responses
+- Add caching
+- Support multiple suppliers
+- Improve stock prediction logic
+
